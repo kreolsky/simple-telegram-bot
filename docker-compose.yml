@@ -1,0 +1,62 @@
+version: '3.7'
+
+x-worker-defaults: &worker_defaults
+  image: simple-telegram-bot
+  restart: always
+  user: appuser
+  command: sh -c 'rq worker bot --url $$REDIS_HOST'
+  volumes:
+    - ./src/:/home/src/
+  depends_on:
+    - redis
+  networks:
+    - app_network
+  env_file:
+    - ./src/.env
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: simple-telegram-bot
+    container_name: simple-telegram-bot
+    restart: always
+    user: appuser
+    # ports:
+    #   - 2990:80
+    volumes:
+      - ./src/:/home/src/
+      - ./logs/:/home/logs/
+    tty: true
+    depends_on:
+      - redis
+    networks:
+      - app_network
+
+  worker_1:
+    <<: *worker_defaults
+    container_name: simple-worker_1
+
+  worker_2:
+    <<: *worker_defaults
+    container_name: simple-worker_2
+
+  worker_3:
+    <<: *worker_defaults
+    container_name: simple-worker_3
+
+  redis:
+    image: redis:6-alpine
+    container_name: simple-redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    restart: always
+    volumes:
+      - ./etc/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./db/redis/:/data/
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge

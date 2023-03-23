@@ -1,0 +1,6 @@
+db/redis/*
+logs/*
+__pycache__/
+telebot.txt
+src/.env
+pen_sample.py
