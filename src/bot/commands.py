@@ -2,17 +2,12 @@ import os
 from telebot import TeleBot
 from dotenv import load_dotenv
 from .classes import MessageHandler
+from .tools import parse_env_users_list
 
 load_dotenv()
-def parse_users(users_str):
-    users_list = [x.strip() for x in os.getenv(users_str).split(',')]
-    if not users_list[0]:
-        return []
-    return users_list
-
 telebot_token = os.getenv("TELEGRAM_API_KEY")
-allow_users = parse_users("ALLOW_USERS")
-admin_users = parse_users("ADMIN_USERS")
+allow_users = parse_env_users_list("ALLOW_USERS")
+admin_users = parse_env_users_list("ADMIN_USERS")
 
 bot = TeleBot(telebot_token)
 app = MessageHandler()

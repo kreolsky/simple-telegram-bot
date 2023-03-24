@@ -11,8 +11,8 @@ x-worker-defaults: &worker_defaults
     - redis
   networks:
     - app_network
-  env_file:
-    - ./src/.env
+  # env_file:
+  #   - ./src/.env
 
 services:
   bot:

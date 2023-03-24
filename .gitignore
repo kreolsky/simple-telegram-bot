@@ -2,5 +2,5 @@ db/redis/*
 logs/*
 __pycache__/
 telebot.txt
-src/.env
+.env
 pen_sample.py
